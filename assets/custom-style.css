@@ -136,10 +136,86 @@ ul.footer-block__details-content a {
   transform: rotate(45deg);
 }
 
-.titanium-label {
-  font-weight: 500;
-  cursor: pointer;
-  user-select: none;
-}
 </style> */
+
+/* =========================================================================
+   ELITE TI REVAMP DESIGN SYSTEM OVERRIDES
+   ========================================================================= */
+
+:root {
+    --color-base-background-1: #0A0A0A;
+    --color-base-background-2: #1A1A1A;
+    --color-base-text: #FFFFFF;
+    --color-base-accent-1: #CCFF00; /* Neon Green */
+    --color-base-accent-2: #4FA3FF; /* Titanium Blue */
+    
+    /* Global overrides to force the theme into the new aesthetic */
+    --color-background: 10, 10, 10;
+    --gradient-background: #0A0A0A;
+    --color-foreground: 255, 255, 255;
+    --color-button: 204, 255, 0; /* #CCFF00 */
+    --color-button-text: 0, 0, 0;
+}
+
+body, .gradient {
+    background-color: #0A0A0A !important;
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px) !important;
+    background-size: 50px 50px !important;
+    color: #FFFFFF !important;
+}
+
+/* Typography Overrides */
+h1, h2, h3, h4, h5, .h0, .h1, .h2, .h3, .h4, .h5, .title {
+    font-family: 'Racing Sans One', cursive !important;
+    text-transform: uppercase;
+    font-style: italic;
+    letter-spacing: 0.05em;
+}
+
+body, p, span, div, a {
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.price, .stats, .telemetry {
+    font-family: 'Roboto Mono', monospace !important;
+    color: #CCFF00 !important;
+}
+
+/* Component Overrides - Aggressive 1px borders & Neon Hovers */
+.card--card, .card--standard .card__inner, .card__inner.gradient {
+    border: 1px solid #333333 !important;
+    background-color: #1A1A1A !important;
+    border-radius: 0px !important;
+    transition: border-color 0.3s ease;
+}
+
+.card-wrapper:hover .card--card, .card-wrapper:hover .card__inner {
+    border-color: #CCFF00 !important;
+}
+
+/* Header & Announcement Bar Consistency */
+.announcement-bar {
+    background-color: #CCFF00 !important;
+}
+.announcement-bar__message {
+    color: #000000 !important;
+    font-family: 'Racing Sans One', cursive !important;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.header {
+    background-color: #0A0A0A !important;
+    border-bottom: 1px solid #333333 !important;
+}
+.header__menu-item span {
+    font-family: 'Racing Sans One', cursive !important;
+    font-style: italic;
+    color: #FFFFFF !important;
+}
+.header__menu-item:hover span {
+    color: #CCFF00 !important;
+}
 
