@@ -9,61 +9,46 @@
  */
 {
   "sections": {
-    "elite_explore_aero_MTq7Kr": {
-      "type": "elite-explore-aero",
+    "sds_elite_parts_showcase_6UGbw9": {
+      "type": "sds-elite-parts-showcase",
       "blocks": {
-        "hotspot_NwMgLn": {
-          "type": "hotspot",
+        "part_hPNDmf": {
+          "type": "part",
           "settings": {
-            "pos_y": 50,
-            "pos_x": 50,
-            "label": "Component",
+            "sku": "SYS: 1X1 CF",
             "title": "VENTED HOOD",
-            "spec": "SYS: 1X1 CF / $4,200"
+            "price": "$4,200.00",
+            "link": ""
           }
         },
-        "hotspot_xRi8cE": {
-          "type": "hotspot",
+        "part_gtTkhV": {
+          "type": "part",
           "settings": {
-            "pos_y": 45,
-            "pos_x": 30,
-            "label": "Component",
-            "title": "VENTED HOOD",
-            "spec": "SYS: 1X1 CF / $4,200"
-          }
-        },
-        "hotspot_cEyyUK": {
-          "type": "hotspot",
-          "settings": {
-            "pos_y": 75,
-            "pos_x": 15,
-            "label": "Component",
+            "sku": "SYS: FORGED",
             "title": "AERO DISCS",
-            "spec": "SYS: FORGED / $2,800"
+            "price": "$2,800.00",
+            "link": ""
           }
         },
-        "hotspot_DnKjYb": {
-          "type": "hotspot",
+        "part_xnAGib": {
+          "type": "part",
           "settings": {
-            "pos_y": 35,
-            "pos_x": 80,
-            "label": "Component",
+            "sku": "SYS: 2X2 CF",
             "title": "GT3 WING",
-            "spec": "SYS: 2X2 CF / $6,500"
+            "price": "$6,500.00",
+            "link": ""
           }
         }
       },
       "block_order": [
-        "hotspot_NwMgLn",
-        "hotspot_xRi8cE",
-        "hotspot_cEyyUK",
-        "hotspot_DnKjYb"
+        "part_hPNDmf",
+        "part_gtTkhV",
+        "part_xnAGib"
       ],
-      "name": "Elite - Explore Aero",
+      "name": "SDS Elite - Parts Gallery",
       "settings": {
-        "bg_image": "shopify://shop_images/Supra_Top_Secret_V12_Style_Body_Kit-8.jpg",
-        "heading": "Explore\nAero\nDynamics",
-        "subtext": "[INTERACT WITH VIRTUAL CHASSIS TO REVEAL TELEMETRY DATA AND COMPONENT SPECS]"
+        "heading": "Component Catalog",
+        "subheading": "BROWSE INDIVIDUAL AERODYNAMIC COMPONENTS ENGINEERED FOR PRECISION FITMENT."
       }
     },
     "custom_slider_CcC4EL": {
@@ -792,7 +777,7 @@
     }
   },
   "order": [
-    "elite_explore_aero_MTq7Kr",
+    "sds_elite_parts_showcase_6UGbw9",
     "custom_slider_CcC4EL",
     "custom_collection_jGXYWV",
     "brand_model_EWgHXn",
