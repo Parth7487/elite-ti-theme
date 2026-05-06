@@ -1,0 +1,133 @@
+<!-- WATERMARK: CREATED BY ANTIGRAVITY -->
+<section class="elite-material-section py-32 relative z-10" style="padding-top: 8rem; padding-bottom: 8rem;">
+  <div class="max-w-container-max mx-auto px-margin-page" style="max-width: 1400px; padding: 0 5rem; margin: 0 auto;">
+    
+    <div class="mb-16 flex flex-col md:flex-row justify-between items-end border-b pb-8" style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid #333; padding-bottom: 2rem; margin-bottom: 4rem; flex-wrap: wrap; gap: 2rem;">
+      <div>
+        <h2 class="italic uppercase" style="font-family: 'Racing Sans One', cursive; font-size: clamp(3rem, 5vw, 4.8rem); line-height: 1; color: #FFFFFF;">
+          {{ section.settings.heading }}
+        </h2>
+        <p class="mt-2 max-w-xl" style="font-family: 'Roboto Mono', monospace; font-size: 14px; color: #888; max-width: 600px; margin-top: 1rem; line-height: 1.4;">
+          {{ section.settings.subheading }}
+        </p>
+      </div>
+      <div class="mt-4 md:mt-0 px-4 py-1 border bg-primary-container/10" style="font-family: 'Roboto Mono', monospace; font-size: 14px; color: #CCFF00; border: 1px solid #CCFF00; padding: 0.25rem 1rem; background-color: rgba(204, 255, 0, 0.1);">
+        {{ section.settings.status_badge }}
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6" style="display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+      
+      {%- for block in section.blocks -%}
+        <div class="elite-mat-card group relative overflow-hidden transition-all duration-500 h-[500px]" style="height: 500px; background-color: #1A1A1A; border: 1px solid #333; position: relative;">
+          
+          {%- if block.settings.image != blank -%}
+            {{ block.settings.image | image_url: width: 800 | image_tag: class: 'absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-luminosity grayscale transition-all duration-700 group-hover:opacity-70 group-hover:scale-110 group-hover:grayscale-0', style: 'position: absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; opacity: 0.4; filter: grayscale(100%); transition: all 0.7s ease;', loading: 'lazy' }}
+          {%- else -%}
+            <!-- Placeholder -->
+            <div class="absolute inset-0 w-full h-full object-cover opacity-40 transition-all duration-700" style="background-color: #222; position: absolute; top:0; left:0; width:100%; height:100%;"></div>
+          {%- endif -%}
+
+          <div class="absolute inset-0 opacity-80" style="background: linear-gradient(to top, #0A0A0A 0%, transparent 100%); position: absolute; top:0; left:0; width:100%; height:100%;"></div>
+          
+          <div class="absolute bottom-0 left-0 w-full p-8 flex flex-col justify-end z-20" style="position: absolute; bottom:0; left:0; width:100%; padding: 2rem; display: flex; flex-direction: column; justify-content: flex-end; z-index: 20;">
+            <div class="mb-2" style="font-family: 'Roboto Mono', monospace; font-size: 14px; color: #CCFF00; margin-bottom: 0.5rem;">{{ block.settings.spec_id }}</div>
+            <h3 class="uppercase italic transition-colors" style="font-family: 'Racing Sans One', cursive; font-size: 2.4rem; color: #FFF; margin: 0;">{{ block.settings.title }}</h3>
+            <p class="elite-mat-desc mt-4 transition-all duration-300" style="font-family: 'Roboto Mono', monospace; font-size: 14px; color: #FFF; margin-top: 1rem; line-height: 1.4; opacity: 0; transform: translateY(1rem); transition: all 0.3s ease;">
+              {{ block.settings.description }}
+            </p>
+          </div>
+        </div>
+      {%- endfor -%}
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .elite-mat-card:hover {
+    border-color: #CCFF00 !important;
+    box-shadow: 0 0 25px rgba(204, 255, 0, 0.4);
+  }
+  .elite-mat-card:hover img {
+    opacity: 0.8 !important;
+    transform: scale(1.1) !important;
+    filter: grayscale(0%) !important;
+  }
+  .elite-mat-card:hover h3 {
+    color: #CCFF00 !important;
+  }
+  .elite-mat-card:hover .elite-mat-desc {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Elite - Material Matrix",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Composite Matrix"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "SELECT BASE MATERIAL STRUCTURAL WEAVE FOR MAXIMUM TENSILE STRENGTH AND AESTHETIC INTEGRATION."
+    },
+    {
+      "type": "text",
+      "id": "status_badge",
+      "label": "Status Badge",
+      "default": "STATUS: ACTIVE INVENTORY"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "material",
+      "name": "Material Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Material Image Background"
+        },
+        {
+          "type": "text",
+          "id": "spec_id",
+          "label": "Spec ID",
+          "default": "SPEC-01"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Material Title",
+          "default": "1x1 Weave"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Classic structural pattern offering optimal balance of rigidity and weight reduction. Ideal for large aero panels."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Elite - Material Matrix",
+      "blocks": [
+        { "type": "material", "settings": { "spec_id": "SPEC-01", "title": "1x1 Weave", "description": "Classic structural pattern offering optimal balance of rigidity and weight reduction. Ideal for large aero panels." } },
+        { "type": "material", "settings": { "spec_id": "SPEC-02", "title": "2x2 Weave", "description": "Aggressive twill pattern favored for complex curves. Superior aesthetic depth with high tensile strength." } },
+        { "type": "material", "settings": { "spec_id": "SPEC-03", "title": "Forged Carbon", "description": "Chopped fiber compression molding. Maximum isotropic strength yielding a unique, chaotic marble aesthetic." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

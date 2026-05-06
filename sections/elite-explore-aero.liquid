@@ -1,0 +1,118 @@
+<!-- WATERMARK: CREATED BY ANTIGRAVITY -->
+<section class="elite-custom-section relative w-full h-[921px] min-h-[600px] bg-surface flex items-center overflow-hidden border-b border-outline-variant">
+  {%- if section.settings.bg_image != blank -%}
+    {{ section.settings.bg_image | image_url: width: 2000 | image_tag: class: 'absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-luminosity', loading: 'lazy' }}
+  {%- else -%}
+    <img alt="Elite Ti Aero Supercar" class="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-luminosity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIyyOV5omTsWEIBWnlgOE5cTG4VXlaPr-idnCYG5dNFyAhUTRvA8BJmvolV3bg_IS9TGNsS_HuayYFcuHztAk78Vvq59HGv4RUXrBMGx72AHR4NGrS4ydWyLR0Qsauy9EOw06fZwzmPHCd2O7OyPtrq1tJ334E3qBjx4UMe-28dj26iLqujUnT_qeakDzAOO0EUaMP9blKo8GHnkx_T-xPjIWpVAKU1Nvk0qIbLyWE61QKfiy_D9WWG-tALwxYAxwhZhK3LM2pwNJj" />
+  {%- endif -%}
+
+  {%- for block in section.blocks -%}
+    <div class="absolute group z-10 cursor-crosshair" style="top: {{ block.settings.pos_y }}%; left: {{ block.settings.pos_x }}%;">
+      <div class="relative w-6 h-6 flex items-center justify-center">
+        <div class="absolute inset-0 bg-primary-container rounded-full animate-ping opacity-75" style="background-color: #CCFF00;"></div>
+        <div class="relative w-3 h-3 bg-primary-container rounded-full" style="background-color: #CCFF00;"></div>
+        <!-- Tooltip -->
+        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-48 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <div class="bg-black/80 backdrop-blur-md border border-outline-variant p-3 shadow-[0_0_20px_rgba(195,244,0,0.15)]" style="border-color: #333;">
+            <div class="font-technical-data text-technical-data text-on-surface-variant uppercase mb-1" style="font-family: 'Roboto Mono', monospace; font-size: 10px; color: #888;">{{ block.settings.label }}</div>
+            <div class="font-h3-subheading text-h3-subheading italic text-primary mb-2" style="font-family: 'Racing Sans One', cursive; color: #FFF;">{{ block.settings.title }}</div>
+            <div class="font-technical-data text-technical-data text-primary-container" style="font-family: 'Roboto Mono', monospace; color: #CCFF00; font-size: 12px;">{{ block.settings.spec }}</div>
+          </div>
+          <div class="w-px h-4 mx-auto" style="background-color: #CCFF00;"></div>
+        </div>
+      </div>
+    </div>
+  {%- endfor -%}
+
+  <div class="relative z-10 w-full max-w-container-max mx-auto px-margin-page pointer-events-none flex flex-col justify-end h-full pb-32" style="padding-left: 5rem; max-width: 1400px;">
+    <h1 class="font-h1-display text-h1-display text-primary italic uppercase tracking-tighter mix-blend-difference drop-shadow-md" style="font-family: 'Racing Sans One', cursive; font-size: clamp(4rem, 8vw, 8rem); line-height: 0.9; color: #FFF;">
+      {{ section.settings.heading | newline_to_br }}
+    </h1>
+    <p class="font-technical-data text-technical-data text-primary-container mt-4 max-w-md bg-black/50 p-2 border-l-2" style="font-family: 'Roboto Mono', monospace; color: #CCFF00; border-color: #CCFF00;">
+      {{ section.settings.subtext }}
+    </p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Elite - Explore Aero",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Explore\nAero\nDynamics"
+    },
+    {
+      "type": "text",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "[INTERACT WITH VIRTUAL CHASSIS TO REVEAL TELEMETRY DATA AND COMPONENT SPECS]"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hotspot",
+      "name": "Hotspot",
+      "settings": [
+        {
+          "type": "range",
+          "id": "pos_y",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Top Position",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "pos_x",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Left Position",
+          "default": 50
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Small Label",
+          "default": "Component"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Component Title",
+          "default": "VENTED HOOD"
+        },
+        {
+          "type": "text",
+          "id": "spec",
+          "label": "Specification/Price",
+          "default": "SYS: 1X1 CF / $4,200"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Elite - Explore Aero",
+      "blocks": [
+        { "type": "hotspot", "settings": { "pos_y": 45, "pos_x": 30, "title": "VENTED HOOD", "spec": "SYS: 1X1 CF / $4,200" } },
+        { "type": "hotspot", "settings": { "pos_y": 75, "pos_x": 15, "title": "AERO DISCS", "spec": "SYS: FORGED / $2,800" } },
+        { "type": "hotspot", "settings": { "pos_y": 35, "pos_x": 80, "title": "GT3 WING", "spec": "SYS: 2X2 CF / $6,500" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
