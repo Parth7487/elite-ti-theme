@@ -1,0 +1,719 @@
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+
+<style>
+      /* ===============================
+         Hero Section Variables
+      =============================== */
+      #hero-fade-{{ section.id }} {
+        --hero-height-d: {{ section.settings.height_desktop }}vh;
+        --hero-height-m: {{ section.settings.height_mobile }}vh;
+        --hero-text: {{ section.settings.text_color }};
+        --hero-btn-bg: {{ section.settings.button_bg }};
+        --hero-btn-border: {{ section.settings.button_border }};
+        --hero-btn-text: {{ section.settings.button_text }};
+        --hero-btn-hoverbg: {{ section.settings.button_hoverbg }};
+        --hero-btn-hoverborder: {{ section.settings.button_hoverborder }};
+        --hero-btn-hovertext: {{ section.settings.button_hovertext }};
+        --hero-dot: {{ section.settings.dot_color }};
+        --hero-dot-active: {{ section.settings.dot_active_color }};
+        --hero-arrow-bg: {{ section.settings.arrow_bg | color_modify: 'alpha', section.settings.arrow_bg_opacity | divided_by: 100.0 }};
+        --hero-arrow-icon: {{ section.settings.arrow_icon }};
+      }
+
+      /* ===============================
+         Hero Wrapper
+      =============================== */
+      #hero-fade-{{ section.id }} .hero-wrapper {
+        position: relative;
+        width: 100%;
+        height: var(--hero-height-d);
+        overflow: hidden;
+      }
+
+      @media (max-width: 767px) {
+        #hero-fade-{{ section.id }} .hero-wrapper {
+          height: var(--hero-height-m);
+        }
+      }
+
+      /* ===============================
+         Swiper Container
+      =============================== */
+      #hero-fade-{{ section.id }} .swiper {
+        width: 100%;
+        height: 100%;
+        position: relative !important;
+      }
+
+      /* ===============================
+         Slide
+      =============================== */
+      #hero-fade-{{ section.id }} .hero-slide {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: transparent;
+      }
+
+      /* Slide Media */
+      #hero-fade-{{ section.id }} .hero-slide__media {
+        position: absolute;
+        inset: 0;
+      }
+
+      #hero-fade-{{ section.id }} .hero-slide__img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        user-select: none;
+        pointer-events: none;
+      }
+
+      /* Overlay */
+      #hero-fade-{{ section.id }} .hero-slide::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: {{ section.settings.overlay_bg }};
+        opacity: {{ section.settings.overlay_opacity }};
+        z-index: 1;
+      }
+
+      /* ===============================
+         Content
+      =============================== */
+      #hero-fade-{{ section.id }} .hero-slide__content {
+        position: absolute;
+        max-width: min(950px, 92vw);
+        transform: translate(-50%, -50%);
+        color: var(--hero-text);
+        z-index: 2;
+      }
+
+      #hero-fade-{{ section.id }} .hero-pretitle {
+        font-weight: 400;
+        font-size: 40px;
+        line-height: 100%;
+        text-transform: capitalize;
+        font-family: Sakana-Regular !important;
+        padding-bottom: 3rem;
+      }
+
+      #hero-fade-{{ section.id }} .hero-title {
+        margin: 0.4rem 0 0.6rem;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 100%;
+        text-transform: uppercase;
+      }
+
+      #hero-fade-{{ section.id }} .hero-subtitle {
+        max-width: 60ch;
+        line-height: 1.5;
+        opacity: 0.92;
+        font-family: Sakana-Regular !important;
+      }
+
+      /* ===============================
+         CTA Button
+      =============================== */
+      #hero-fade-{{ section.id }} .hero-cta {
+        margin-top: 2.5rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0 1rem;
+        text-decoration: none;
+        transition: transform 0.2s ease;
+        background: var(--hero-btn-bg);
+        color: var(--hero-btn-text);
+        border: 2px solid var(--hero-btn-border);
+        padding: 1rem 3rem;
+        font-family: Sakana-Regular !important;
+      }
+
+      #hero-fade-{{ section.id }} .hero-cta svg path {
+        fill: var(--hero-btn-text);
+      }
+
+      #hero-fade-{{ section.id }} .hero-cta:hover {
+        transform: translateY(-2px);
+        background: var(--hero-btn-hoverbg);
+        color: var(--hero-btn-hovertext);
+        border: 2px solid var(--hero-btn-hoverborder);
+      }
+
+      #hero-fade-{{ section.id }} .hero-cta:hover svg path {
+        fill: var(--hero-btn-hovertext);
+      }
+
+      /* ===============================
+         Navigation
+      =============================== */
+      #hero-fade-{{ section.id }} .hero-nav {
+        position: absolute;
+        right: 0;
+        bottom: 30px;
+        transform: translateX(-40%);
+        display: flex;
+        align-items: center;
+        gap: 0 10rem;
+        z-index: 6;
+        pointer-events: auto;
+      }
+
+      #hero-fade-{{ section.id }} .swiper-button-prev,
+      #hero-fade-{{ section.id }} .swiper-button-next {
+        position: static;
+        width: 36px;
+        height: 36px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 36px;
+        background: var(--hero-arrow-bg);
+      }
+
+      #hero-fade-{{ section.id }} .swiper-button-prev::after,
+      #hero-fade-{{ section.id }} .swiper-button-next::after {
+        display: none;
+      }
+
+      #hero-fade-{{ section.id }} .hero-arrow {
+        width: 30px;
+        height: 30px;
+        fill: var(--hero-arrow-icon);
+      }
+
+      /* ===============================
+         Pagination
+      =============================== */
+      #hero-fade-{{ section.id }} .swiper-pagination {
+        display: flex !important;
+        align-items: center;
+        gap: 8px;
+        bottom: 15px;
+        justify-content: center;
+      }
+
+      #hero-fade-{{ section.id }} .swiper-pagination--solo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 18px;
+        z-index: 6;
+      }
+
+      #hero-fade-{{ section.id }} .swiper-pagination-bullet {
+        width: 6px;
+        height: 6px;
+        background: var(--hero-dot);
+        opacity: 1;
+        transition: all 0.25s ease;
+      }
+
+      #hero-fade-{{ section.id }} .swiper-pagination-bullet-active {
+    width: 60px;
+        border-radius: 50px;
+            background: var(--hero-dot-active);
+
+      }
+
+      /* ===============================
+         Responsive: Tablet
+      =============================== */
+
+
+                              @media (max-width: 1480px) {
+
+        #hero-fade-{{ section.id }} .hero-title {
+          font-size: 18px;
+        }
+
+        #hero-fade-{{ section.id }} .hero-subtitle {
+          font-size: 14px;
+          max-width: 100%;
+        }
+
+                               }
+      @media (max-width: 1024px) {
+        #hero-fade-{{ section.id }} .hero-wrapper {
+          height: calc(var(--hero-height-d) * 0.75);
+        }
+
+
+
+        #hero-fade-{{ section.id }} .hero-nav {
+          bottom: 20px;
+          gap: 12px;
+        }
+
+        #hero-fade-{{ section.id }} .swiper-button-prev,
+        #hero-fade-{{ section.id }} .swiper-button-next {
+  display:none;
+        }
+
+
+        #hero-fade-{{ section.id }} .hero-pretitle {
+          font-size: 32px;
+          padding-bottom: 30px;
+        }
+
+
+        #hero-fade-{{ section.id }} .hero-cta {
+          padding: 0.75rem 1rem;
+          font-size: 14px;
+        }
+      }
+
+      /* ===============================
+         Responsive: Mobile
+      =============================== */
+      @media (max-width: 768px) {
+        #hero-fade-{{ section.id }} .hero-wrapper {
+          height: var(--hero-height-m);
+        }
+
+        #hero-fade-{{ section.id }} .hero-nav {
+          bottom: 14px;
+          gap: 10px;
+        }
+
+        #hero-fade-{{ section.id }} .hero-pretitle {
+          font-size: 24px;
+          padding-bottom: 20px;
+        }
+
+        #hero-fade-{{ section.id }} .hero-title {
+          font-size: 16px;
+        }
+
+        #hero-fade-{{ section.id }} .hero-subtitle {
+          font-size: 12px;
+          max-width: 45ch;
+        }
+
+        #hero-fade-{{ section.id }} .hero-cta {
+          font-size: 12px;
+        }
+      }
+</style>
+
+<section id="hero-fade-{{ section.id }}" class="hero-fade" data-section-id="{{ section.id }}">
+  <div class="hero-wrapper">
+    <div class="swiper" id="swiper-{{ section.id }}">
+      <div class="swiper-wrapper">
+        {% for block in section.blocks %}
+          {% assign tx = block.settings.tx | default: 20 %}
+          {% assign ty = block.settings.ty | default: 80 %}
+          {% assign content_color = block.settings.text_color | default: section.settings.text_color %}
+
+          {%- style -%}
+                      #hero-fade-{{ section.id }} .hero-slide__content {
+                        left: {{ tx }}%;
+                        top: {{ ty }}%;
+                        text-align: {{ block.settings.align }};
+                        color: {{ content_color }};
+                      }
+
+                        @media (max-width: 1480px) {
+              #hero-fade-{{ section.id }} .hero-wrapper {
+                height: calc(var(--hero-height-d) * 0.75);
+              }
+
+              #hero-fade-{{ section.id }} .hero-slide__content {
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                text-align: center;
+                width: 100%;
+              }
+
+            }
+          {%- endstyle -%}
+
+          <div class="swiper-slide hero-slide" {{ block.shopify_attributes }}>
+            <div class="hero-slide__media" aria-hidden="true">
+              {% if block.settings.image != blank %}
+                <img
+                  height=""
+                  width=""
+                  class="hero-slide__img"
+                  srcset="
+                    {{ block.settings.image | image_url: width: 750 }} 750w,
+                    {{ block.settings.image | image_url: width: 1100 }} 1100w,
+                    {{ block.settings.image | image_url: width: 1500 }} 1500w,
+                    {{ block.settings.image | image_url: width: 2100 }} 2100w,
+                    {{ block.settings.image | image_url: width: 3000 }} 3000w
+                  "
+                  sizes="100vw"
+                  src="{{ block.settings.image | image_url: width: 2100 }}"
+                  alt="{{ block.settings.alt | escape }}"
+                >
+              {% else %}
+                {{ 'lifestyle-1' | placeholder_svg_tag }}
+              {% endif %}
+            </div>
+
+            {% if section.settings.overlay_opacity > 0 %}
+              <span class="hero-slide__overlay" aria-hidden="true"></span>
+            {% endif %}
+
+            <div class="hero-slide__content">
+              {% if block.settings.pretitle != blank %}
+                <div class="hero-pretitle">
+                  {{ block.settings.pretitle }}
+                </div>
+              {% endif %}
+
+              {% if block.settings.title != blank %}
+                <h2 class="hero-title" style="color: {{ content_color }};">
+                  {{ block.settings.title }}
+                </h2>
+              {% endif %}
+
+              {% if block.settings.subtitle != blank %}
+                <div
+                  class="hero-subtitle"
+                  style="color: {{ content_color | color_modify: 'alpha', 0.92 }};"
+                >
+                  {{ block.settings.subtitle }}
+                </div>
+              {% endif %}
+
+              {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+                <a
+                  class="hero-cta"
+                  href="{{ block.settings.button_link }}"
+                >
+                  {{ block.settings.button_label }}
+                  {% render 'btn-wheelicon' %}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+
+        {% if section.blocks.size == 1 %}
+          {% for block in section.blocks %}
+            <div class="swiper-slide hero-slide" data-clone="true">
+              <div class="hero-slide__media" aria-hidden="true">
+                {% if block.settings.image != blank %}
+                  <img
+                    class="hero-slide__img"
+                    height=""
+                    width=""
+                    src="{{ block.settings.image | image_url: width: 2100 }}"
+                    alt="{{ block.settings.alt | escape }}"
+                  >
+                {% else %}
+                  {{ 'lifestyle-1' | placeholder_svg_tag }}
+                {% endif %}
+              </div>
+              {% if section.settings.overlay_opacity > 0 %}
+                <span class="hero-slide__overlay" aria-hidden="true"></span>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      {% if section.settings.show_arrows %}
+        <div class="hero-nav">
+          <div class="swiper-button-prev" aria-label="Previous slide">
+            {% render 'hero-nav-left' %}
+          </div>
+
+          {% if section.settings.show_dots %}
+            <div class="swiper-pagination" aria-label="Slider pagination"></div>
+          {% endif %}
+
+          <div class="swiper-button-next" aria-label="Next slide">
+            {% render 'hero-nav-right' %}
+          </div>
+        </div>
+      {% elsif section.settings.show_dots %}
+        <div class="swiper-pagination swiper-pagination--solo" aria-label="Slider pagination"></div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js" defer></script>
+<script>
+  (function() {
+    var sectionId = "{{ section.id }}";
+    function initHeroSwiper() {
+      var scope = document.getElementById("hero-fade-" + sectionId);
+      if (!scope) return;
+      var el = scope.querySelector("#swiper-" + sectionId);
+      if (!el) return;
+
+      if (typeof window.Swiper === "undefined") { setTimeout(initHeroSwiper, 50); return; }
+      if (el.swiper) { try { el.swiper.destroy(true, true); } catch(e) {} }
+
+      el.swiper = new Swiper(el, {
+        slidesPerView: 1,
+        effect: 'fade',
+        fadeEffect: { crossFade: true },
+        speed: {{ section.settings.speed | default: 600 }},
+        loop: {{ section.settings.loop }},
+        allowTouchMove: {{ section.settings.allow_touch }},
+        watchOverflow: false,
+        observeParents: true,
+        observer: true,
+        preloadImages: true,
+        autoplay: {% if section.settings.autoplay %}{ delay: {{ section.settings.delay | default: 4500 }}, disableOnInteraction: false }{% else %}false{% endif %},
+        pagination: {% if section.settings.show_dots %}{ el: scope.querySelector('.hero-nav .swiper-pagination') || scope.querySelector('.swiper-pagination--solo'), clickable: true }{% else %}false{% endif %},
+        navigation: {% if section.settings.show_arrows %}{ nextEl: scope.querySelector('.swiper-button-next'), prevEl: scope.querySelector('.swiper-button-prev') }{% else %}false{% endif %}
+      });
+    }
+    function ready(fn){ if(document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
+    ready(initHeroSwiper);
+    window.addEventListener('load', initHeroSwiper);
+    document.addEventListener('shopify:section:load', function(e){ if (e.target && e.target.id === "hero-fade-{{ section.id }}") initHeroSwiper(); });
+    document.addEventListener('shopify:section:reorder', initHeroSwiper);
+    document.addEventListener('shopify:block:select', initHeroSwiper);
+    document.addEventListener('shopify:block:deselect', initHeroSwiper);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Hero – Fade Slider",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Slider height"
+    },
+    {
+      "type": "range",
+      "id": "height_desktop",
+      "label": "Height (desktop)",
+      "min": 40,
+      "max": 100,
+      "step": 1,
+      "default": 75
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "label": "Height (mobile)",
+      "min": 40,
+      "max": 100,
+      "step": 1,
+      "default": 60
+    },
+
+    {
+      "type": "header",
+      "content": "Default Styling"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "hero-btn-border",
+      "label": "Button border",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "#111111"
+    },
+
+    {
+      "type": "color",
+      "id": "button_hoverbg",
+      "label": "Button hover background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "button_hoverborder",
+      "label": "Button hover border",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "button_hovertext",
+      "label": "Button hover text",
+      "default": "#111111"
+    },
+
+    {
+      "type": "header",
+      "content": "Navigation Controls"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show arrows",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "arrow_bg",
+      "label": "Arrow background color",
+      "default": "#141414"
+    },
+    {
+      "type": "range",
+      "id": "arrow_bg_opacity",
+      "label": "Arrow background opacity (%)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "arrow_icon",
+      "label": "Arrow icon color",
+      "default": "#FFFFFF"
+    },
+
+    {
+      "type": "header",
+      "content": "Dot Indicators"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show dots",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#9AA0A6"
+    },
+    {
+      "type": "color",
+      "id": "dot_active_color",
+      "label": "Active dot color",
+      "default": "#FFFFFF"
+    },
+
+    {
+      "type": "header",
+      "content": "Autoplay Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "delay",
+      "label": "Autoplay delay (ms)",
+      "min": 1500,
+      "max": 9900,
+      "step": 100,
+      "default": 4500
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Transition speed (ms)",
+      "min": 200,
+      "max": 2000,
+      "step": 50,
+      "default": 600
+    },
+
+    {
+      "type": "header",
+      "content": "Additional Options"
+    },
+    {
+      "type": "checkbox",
+      "id": "loop",
+      "label": "Loop slides",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "allow_touch",
+      "label": "Allow swipe on touch",
+      "default": true
+    },
+
+    { "type": "header", "content": "Overlay " },
+    { "type": "color", "id": "overlay_bg", "label": "Overlay background", "default": "#000000" },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.3
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+
+        { "type": "text", "id": "pretitle", "label": "Small heading", "default": "FULL AERO KITS FOR EVERY BUILD" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Track, Street, Drift, or Show" },
+        {
+          "type": "textarea",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "We’ve got the style and performance to match your vision."
+        },
+
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop now" },
+        { "type": "url", "id": "button_link", "label": "Button link" },
+
+        { "type": "header", "content": "Content position (percentage)" },
+        { "type": "range", "id": "tx", "label": "Horizontal (X%)", "min": 20, "max": 100, "step": 1, "default": 25 },
+        { "type": "range", "id": "ty", "label": "Vertical (Y%)", "min": 20, "max": 100, "step": 1, "default": 80 },
+        {
+          "type": "select",
+          "id": "align",
+          "label": "Text align",
+          "default": "left",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ]
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Hero – Fade Slider",
+      "category": "Image",
+      "blocks": [{ "type": "slide" }, { "type": "slide" }]
+    }
+  ]
+}
+{% endschema %}

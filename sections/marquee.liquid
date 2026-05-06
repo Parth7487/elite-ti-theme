@@ -1,0 +1,170 @@
+
+  <style>
+    .marquee-strip--{{ section.id }}{
+      background: var(--bg);
+      padding: var(--pad-y) 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .marquee-strip--{{ section.id }} .marquee-strip__viewport{
+      --dir: 1;
+      color: var(--text);
+    }
+    .marquee-strip--{{ section.id }} .marquee-strip__viewport[data-direction="right"]{ --dir: -1; }
+
+    .marquee-strip--{{ section.id }} .marquee-strip__track{
+      display: flex;
+      width: max-content;
+      animation: marquee-{{ section.id }} var(--duration) linear infinite;
+      will-change: transform;
+    }
+    .marquee-strip--{{ section.id }} .is-pausable:hover .marquee-strip__track{ animation-play-state: paused; }
+
+    @keyframes marquee-{{ section.id }}{
+      from { transform: translateX(0); }
+      to   { transform: translateX(calc(-50% * var(--dir))); }
+    }
+
+    .marquee-strip--{{ section.id }} .marquee-strip__group{
+      display: inline-flex;
+      align-items: center;
+      gap: var(--gap);
+      padding-right: var(--gap);
+    }
+
+    .marquee-strip--{{ section.id }} .marquee-strip__item{
+      font-weight: var(--weight);
+      letter-spacing: var(--letterspace);
+      font-size: var(--size-desktop);
+      line-height: 1;
+      white-space: nowrap;
+      color: var(--text);
+      display: inline-block;
+    }
+    .marquee-strip--{{ section.id }} .marquee-strip__item.is-caps{ text-transform: uppercase; }
+
+    /* Solid vs Outline styles */
+    .marquee-strip--{{ section.id }} .marquee-strip__item.is-solid{
+      -webkit-text-stroke: 0 transparent;
+      color: var(--text);
+    }
+
+    .marquee-strip--{{ section.id }} .marquee-strip__item.is-outline{
+      color: transparent !important;                    
+      -webkit-text-stroke: var(--stroke) var(--text) !important; 
+      text-shadow: none;
+      font-weight: 600;  
+          font-size: 50px;
+    font-family: 'Sakana-Regular';                                
+    }
+
+    .marquee-strip--{{ section.id }} .marquee-strip__star{
+      color: var(--accent);
+      flex: 0 0 auto;
+    }
+
+    /* Responsiveness */
+    @media (max-width: 749px){
+      .marquee-strip--{{ section.id }} .marquee-strip__item{ font-size: var(--size-mobile); }
+    }
+
+    /* Your custom font for solid caps item */
+    span.marquee-strip__item.is-caps.is-solid {
+      font-family: 'Sakana-Regular';
+      font-weight: 400;
+      font-size: 50px;
+      line-height: 100%;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+  </style>
+
+<section
+  class="marquee-strip marquee-strip--{{ section.id }}"
+  style="--bg: {{ section.settings.bg | default: '#121416' }}; --text: {{ section.settings.text_color | default: '#ffffff' }}; --accent: {{ section.settings.star_color | default: '#a6e22e' }}; --gap: {{ section.settings.item_gap | default: 52 }}px; --pad-y: {{ section.settings.pad_y | default: 16 }}px; --size-desktop: {{ section.settings.font_size_desktop | default: 28 }}px; --size-mobile: {{ section.settings.font_size_mobile | default: 18 }}px; --weight: {{ section.settings.font_weight | default: 800 }}; --letterspace: {{ section.settings.letter_spacing | default: 0 }}px; --stroke: {{ section.settings.outline_stroke | default: 2 }}px; --duration: {{ section.settings.duration | default: 28 }}s;"
+>
+  <div
+    class="marquee-strip__viewport {% if section.settings.pause_on_hover %}is-pausable{% endif %}"
+    data-direction="{{ section.settings.direction }}"
+  >
+    {% capture marquee_slot %}
+      {% for block in section.blocks %}
+        {% if block.type == 'item' %}
+          <span class="marquee-strip__item {% if section.settings.all_caps %}is-caps{% endif %} {% if block.settings.style == 'outline' %}is-outline{% else %}is-solid{% endif %}"
+                style="{% if block.settings.custom_color != blank %}--text: {{ block.settings.custom_color }};{% endif %}">
+            {{ block.settings.text | escape }}
+          </span>
+          <span class="marquee-strip__star" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="{{ section.settings.star_size }}" height="{{ section.settings.star_size }}" focusable="false" role="presentation">
+              <path d="M12 2l2.657 6.73L22 9.27l-5 4.873L18.314 22 12 18.27 5.686 22 7 14.143 2 9.27l7.343-1.54L12 2z" fill="currentColor"/>
+            </svg>
+          </span>
+        {% endif %}
+      {% endfor %}
+    {% endcapture %}
+
+    <!-- Track duplicated twice for seamless loop -->
+    <div class="marquee-strip__track">
+      <div class="marquee-strip__group">{{ marquee_slot }}</div>
+      <div class="marquee-strip__group">{{ marquee_slot }}</div>
+    </div>
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "Marquee strip ⭐",
+  "tag": "section",
+  "class": "section-marquee-strip",
+  "settings": [
+    { "type": "color", "id": "bg", "label": "Background color", "default": "#121416" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#ffffff" },
+    { "type": "color", "id": "star_color", "label": "Star color", "default": "#A6E22E" },
+
+    { "type": "range", "id": "font_size_desktop", "min": 14, "max": 72, "step": 1, "unit": "px", "label": "Font size (desktop)", "default": 32 },
+    { "type": "range", "id": "font_size_mobile",  "min": 12, "max": 42, "step": 1, "unit": "px", "label": "Font size (mobile)", "default": 20 },
+    { "type": "range", "id": "font_weight", "min": 400, "max": 900, "step": 50, "label": "Font weight", "default": 800 },
+    { "type": "range", "id": "letter_spacing", "min": -2, "max": 8, "step": 1, "unit": "px", "label": "Letter spacing", "default": 0 },
+    { "type": "checkbox", "id": "all_caps", "label": "Uppercase text", "default": true },
+    { "type": "range", "id": "outline_stroke", "min": 1, "max": 6, "step": 1, "unit": "px", "label": "Outline stroke width", "default": 2 },
+
+    { "type": "range", "id": "star_size", "min": 12, "max": 40, "step": 1, "unit": "px", "label": "Star size", "default": 18 },
+    { "type": "range", "id": "item_gap", "min": 16, "max": 120, "step": 2, "unit": "px", "label": "Gap between items", "default": 52 },
+
+    { "type": "select", "id": "direction", "label": "Scroll direction", "default": "left", "options": [
+      { "value": "left", "label": "Left" },
+      { "value": "right", "label": "Right" }
+    ]},
+    { "type": "range", "id": "duration", "min": 8, "max": 60, "step": 1, "unit": "s", "label": "Loop duration (lower = faster)", "default": 28 },
+    { "type": "checkbox", "id": "pause_on_hover", "label": "Pause on hover", "default": true },
+
+    { "type": "range", "id": "pad_y", "min": 0, "max": 60, "step": 2, "unit": "px", "label": "Top & bottom padding", "default": 18 }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Text item",
+      "limit": 20,
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Top Quality" },
+        { "type": "select", "id": "style", "label": "Style", "default": "solid", "options": [
+          { "value": "solid", "label": "Solid (filled)" },
+          { "value": "outline", "label": "Outline (stroked)" }
+        ]},
+        { "type": "color", "id": "custom_color", "label": "Override text color (optional)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee strip ⭐",
+      "blocks": [
+        { "type": "item", "settings": { "text": "Top Quality", "style": "solid" } },
+        { "type": "item", "settings": { "text": "Trusted by Legends", "style": "outline" } },
+        { "type": "item", "settings": { "text": "Lifetime Warranty", "style": "solid" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

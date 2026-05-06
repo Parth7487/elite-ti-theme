@@ -1,0 +1,468 @@
+<style>
+  .neo-blog--{{ section.id }} {
+    background: var(--neo-bg);
+    color: var(--neo-text);
+    padding: clamp(40px, 6vw, 80px) 0;
+    overflow: hidden;
+  }
+
+  /* HEADINGS */
+  .neo-kicker {
+    text-align: center;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-size: 20px;
+    color: var(--neo-accent);
+    margin: 0 0 8px;
+  }
+
+  .neo-heading {
+    text-align: center;
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 0 0 34px;
+    color: #fff;
+  }
+
+  /* GRID */
+  .neo-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 28px;
+  }
+
+  @media (min-width: 750px) {
+    .neo-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .neo-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* CARD */
+  .neo-card {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    will-change: transform;
+  }
+
+  .neo-card:hover,
+  .neo-card.is-active {
+    transform: translateY(-4px);
+    border-color: rgba(182, 255, 0, 0.45);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  }
+
+  /* MAIN MEDIA */
+  .neo-media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+
+  .neo-media__img,
+  .neo-media__placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transform: scale(1);
+    transition: transform 0.45s ease, opacity 0.25s ease;
+  }
+
+  .neo-card:hover .neo-media__img,
+  .neo-card.is-active .neo-media__img {
+    transform: scale(1.06);
+  }
+
+  .neo-date-badge {
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    background: var(--neo-accent);
+    color: #0c0f12;
+    font-weight: 800;
+    font-size: 12px;
+    line-height: 1;
+    padding: 5px 12px;
+    border-radius: 0;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-family: 'Sakana-Regular';
+    transition: opacity 0.2s ease;
+    z-index: 1;
+  }
+
+  /* CARD BODY */
+  .neo-card__body {
+    padding: 50px 18px 22px;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .neo-title {
+    margin: 0 0 10px;
+    font-size: 30px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .neo-title a {
+    color: var(--neo-text);
+    text-decoration: none;
+  }
+
+  .neo-title a:hover {
+    color: var(--neo-accent);
+  }
+
+  .neo-excerpt {
+    margin: 0 0 16px;
+    color: var(--neo-dim);
+    line-height: 1.6;
+    font-size: 14px;
+  }
+
+  .neo-link {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 4px;
+    color: #fff;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1;
+    text-transform: uppercase;
+    font-family: 'Sakana-Regular';
+    text-decoration: underline;
+    text-underline-offset: 10px;
+  }
+
+  /* ALT VIEW */
+  .neo-card__alt {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    text-decoration: none;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .neo-alt__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1);
+    transition: transform 0.35s ease;
+  }
+
+  .neo-alt__content {
+    position: absolute;
+    z-index: 1;
+    padding: 24px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: start;
+  }
+
+  .neo-alt__title {
+    margin: 0 0 12px;
+    font-size: clamp(18px, 1.8vw, 28px);
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--neo-text);
+    text-shadow: 0 8px 36px rgba(0, 0, 0, 0.8);
+  }
+
+  .neo-alt__read {
+    display: inline-block;
+    color: #fff;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1;
+    text-transform: uppercase;
+    font-family: 'Sakana-Regular';
+    text-decoration: underline;
+    text-underline-offset: 10px;
+  }
+
+  /* HOVER STATES */
+  .neo-card:hover .neo-card__body,
+  .neo-card.is-active .neo-card__body {
+    opacity: 1;
+    transform: translateY(6px);
+  }
+
+  .neo-card:hover .neo-card__alt,
+  .neo-card.is-active .neo-card__alt {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .neo-card:hover .neo-alt__img,
+  .neo-card.is-active .neo-alt__img {
+    transform: scale(1.02);
+  }
+
+  /* VIEW ALL BUTTON */
+  .neo-cta {
+    text-align: center;
+    margin-top: 34px;
+  }
+
+  .neo-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: fit-content;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 51px;
+    color: #0c0f12;
+    background: var(--neo-accent);
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: 'Sakana-Regular';
+  }
+
+  .neo-btn svg path {
+    fill: #0c0f12;
+  }
+
+  .neo-btn:hover {
+    background: transparent;
+    border: 1px solid  var(--neo-accent);
+    color: var(--neo-accent);
+  }
+
+  .neo-btn:hover svg path {
+    fill: var(--neo-accent);
+  }
+
+  /* EMPTY STATE */
+  .neo-empty {
+    opacity: 0.7;
+    text-align: center;
+  }
+
+  /* MOBILE */
+  @media (max-width: 640px) {
+    .neo-card__body {
+      padding: 0;
+    }
+  }
+
+
+
+@media (max-width: 768px) {
+.neo-blog--{{ section.id }} .neo-kicker {
+    font-size: 14px;
+}
+.neo-blog--{{ section.id }} .neo-heading {   
+    font-size: 26px;
+}
+.neo-blog--{{ section.id }} .neo-date-badge {    
+    font-size: 10px;
+}
+.neo-blog--{{ section.id }} .neo-title { 
+    font-size: 22px;
+}
+.neo-blog--{{ section.id }} .neo-excerpt {
+    font-size: 12px;
+}
+.neo-blog--{{ section.id }} .neo-link {
+  font-size: 13px;  
+}
+.neo-blog--{{ section.id }} .neo-btn {
+    padding: 0px 12px;
+    height: 44px;
+}
+}
+
+
+
+</style>
+
+<section
+  class="neo-blog neo-blog--{{ section.id }}"
+  style="
+    --neo-bg: {{ section.settings.bg | default: '#07090b' }};
+    --neo-text: {{ section.settings.text | default: '#ffffff' }};
+    --neo-dim: {{ section.settings.dim | default: '#9aa3ad' }};
+    --neo-accent: {{ section.settings.accent | default: '#b6ff00' }};
+  "
+>
+  <div class="neo-blog__inner page-width">
+    {% if section.settings.kicker != blank %}
+      <p class="neo-kicker">{{ section.settings.kicker }}</p>
+    {% endif %}
+
+    {% if section.settings.heading != blank %}
+      <h2 class="neo-heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    {% assign the_blog = section.settings.blog | default: blog %}
+    {% assign limit = section.settings.post_limit | default: 3 %}
+
+    <div class="neo-grid">
+      {% for article in the_blog.articles limit: limit %}
+        {% assign img = article.image %}
+        <article class="neo-card" data-index="{{ forloop.index0 }}">
+          <!-- MAIN IMAGE -->
+          <a class="neo-card__image-link" href="{{ article.url }}" aria-label="{{ article.title | escape }}">
+            <div class="neo-media">
+              {% if img %}
+                {{
+                  img
+                  | image_url: width: 1600
+                  | image_tag:
+                    widths: '600,800,1000,1200,1600',
+                    sizes: '(min-width: 1200px) 33vw, (min-width: 750px) 50vw, 100vw',
+                    class: 'neo-media__img',
+                    alt: img.alt
+                  | escape
+                }}
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'neo-media__placeholder' }}
+              {% endif %}
+              {% if section.settings.show_date %}
+                <span class="neo-date-badge">
+                  {{ article.published_at | date: '%d' }}
+                  {{ article.published_at | date: '%B' | upcase }}
+                  {{ article.published_at | date: '%Y' }}
+                </span>
+              {% endif %}
+            </div>
+          </a>
+
+          <!-- CARD BODY -->
+          <div class="neo-card__body">
+            <h3 class="neo-title">
+              <a href="{{ article.url }}">{{ article.title | truncate: 20 }}</a>
+            </h3>
+
+            {% if section.settings.show_excerpt %}
+              <p class="neo-excerpt">{{ article.excerpt_or_content | strip_html | truncate: 180 }}</p>
+            {% endif %}
+
+            <a class="neo-link" href="{{ article.url }}">{{ section.settings.read_label | default: 'Read more' }}</a>
+          </div>
+
+          <!-- ALT VIEW -->
+          <a class="neo-card__alt" href="{{ article.url }}" aria-label="{{ article.title | escape }}">
+            {% if section.settings.show_date %}
+              <span class="neo-date-badge">
+                {{ article.published_at | date: '%d' }}
+                {{ article.published_at | date: '%B' | upcase }}
+                {{ article.published_at | date: '%Y' }}
+              </span>
+            {% endif %}
+            {% if img %}
+              {{
+                img
+                | image_url: width: 1600
+                | image_tag:
+                  widths: '800,1200,1600',
+                  sizes: '(min-width: 1200px) 33vw, (min-width: 750px) 50vw, 100vw',
+                  class: 'neo-alt__img',
+                  alt: img.alt
+                | escape
+              }}
+            {% endif %}
+            <div class="neo-alt__content">
+              <h3 class="neo-alt__title">{{ article.title | truncate: 25 }}</h3>
+              <span class="neo-alt__read">{{ section.settings.read_label | default: 'Read more' }}</span>
+            </div>
+          </a>
+        </article>
+      {% else %}
+        <p class="neo-empty">No articles found. Pick a blog in the section settings.</p>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.viewall_label != blank and section.settings.viewall_link != blank %}
+      <div class="neo-cta">
+        <a class="neo-btn" href="{{ section.settings.viewall_link }}">
+          {{ section.settings.viewall_label }}
+          {% render 'btn-wheelicon' %}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  (function () {
+    // Mobile/Touch: tap to toggle the hover state
+    const cards = document.querySelectorAll('.neo-blog--{{ section.id }} .neo-card');
+
+    cards.forEach((card) => {
+      card.addEventListener('click', function (e) {
+        // Toggle only when clicking on media or alt layer; let title/read links navigate
+        const toggleArea = e.target.closest('.neo-media, .neo-card__alt');
+        if (toggleArea) {
+          e.preventDefault();
+          cards.forEach((c) => {
+            if (c !== card) c.classList.remove('is-active');
+          });
+          card.classList.toggle('is-active');
+        }
+      });
+
+      document.addEventListener(
+        'click',
+        function (e) {
+          if (!e.target.closest('.neo-blog--{{ section.id }} .neo-card')) {
+            cards.forEach((c) => c.classList.remove('is-active'));
+          }
+        },
+        { passive: true }
+      );
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Blog Posts",
+  "class": "section",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Small label (kicker)", "default": "Latest Blog" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Blog Posts" },
+
+    { "type": "blog", "id": "blog", "label": "Blog" },
+    { "type": "range", "id": "post_limit", "min": 1, "max": 12, "step": 1, "label": "Posts to show", "default": 3 },
+
+    { "type": "checkbox", "id": "show_date", "label": "Show date badge", "default": true },
+    { "type": "checkbox", "id": "show_excerpt", "label": "Show excerpt", "default": true },
+    { "type": "text", "id": "read_label", "label": "Read more label", "default": "Read more" },
+
+    { "type": "text", "id": "viewall_label", "label": "View all button label", "default": "View all" },
+    { "type": "url", "id": "viewall_link", "label": "View all link" },
+
+    { "type": "color", "id": "bg", "label": "Background color", "default": "#07090b" },
+    { "type": "color", "id": "text", "label": "Text color", "default": "#ffffff" },
+    { "type": "color", "id": "dim", "label": "Muted text color", "default": "#9aa3ad" },
+    { "type": "color", "id": "accent", "label": "Accent color", "default": "#b6ff00" }
+  ],
+  "blocks": [],
+  "presets": [{ "name": "Blog Posts", "category": "Blog" }]
+}
+{% endschema %}

@@ -1,0 +1,375 @@
+<style>
+    /*========================================
+      SECTION: COMBAT
+    ========================================*/
+    #combat-{{ section.id }} .combat-wrap {
+      padding-top: var(--pad-t);
+      padding-bottom: var(--pad-b);
+    }
+
+    /*========================================
+      LAYOUT STRUCTURE
+    ========================================*/
+    #combat-{{ section.id }} .combat-row {
+      display: flex;
+      flex-direction: column; /* mobile default */
+      min-height: {{ section.settings.desktop_min_height }}px;
+    }
+
+    #combat-{{ section.id }} .combat-row.dir-row { /* image left on desktop */ }
+    #combat-{{ section.id }} .combat-row.dir-row-reverse { /* image right on desktop */ }
+
+    /*========================================
+      IMAGE COLUMN
+    ========================================*/
+    #combat-{{ section.id }} .combat-media {
+      position: relative;
+      overflow: hidden;
+      flex: 1 1 50%;
+    }
+
+    #combat-{{ section.id }} .combat-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    #combat-{{ section.id }} .img-placeholder {
+      height: 100%;
+      min-height: 320px;
+      display: grid;
+      place-items: center;
+      background: #e6e6e6;
+      color: #777;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
+
+    /*========================================
+      CONTENT COLUMN
+    ========================================*/
+    #combat-{{ section.id }} .combat-content {
+      display: flex;
+      align-items: center;
+      flex: 1 1 50%;
+    }
+
+    #combat-{{ section.id }} .content-inner {
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /*========================================
+      BRAND LOGO
+    ========================================*/
+    #combat-{{ section.id }} .brand-mark {
+      margin-bottom: 40px;
+    }
+
+    #combat-{{ section.id }} .brand-logo {
+      max-width: 120px;
+      height: auto;
+    }
+
+    /*========================================
+      TEXT ELEMENTS
+    ========================================*/
+    #combat-{{ section.id }} .kicker {
+      margin: 0 0 40px;
+      opacity: 0.8;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 100%;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      font-family: 'Sakana-Regular';
+    }
+
+    #combat-{{ section.id }} .title {
+      margin: 0 0 40px;
+      font-weight: 400;
+      font-size: 40px;
+      line-height: 100%;
+      letter-spacing: 0;
+      text-transform: capitalize;
+      color: #fff;
+      font-family: 'Sakana-Regular';
+    }
+
+    #combat-{{ section.id }} .copy {
+      max-width: 760px;
+      font-size: 14px;
+      line-height: 1.7;
+      letter-spacing: 0.02em;
+      opacity: 0.9;
+      text-transform: uppercase;
+    }
+
+    #combat-{{ section.id }} .content-inner p {
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 30px;
+      letter-spacing: 0;
+      font-family: 'Sakana-Regular';
+    }
+
+    /*========================================
+      BUTTON
+    ========================================*/
+    #combat-{{ section.id }} .combat-btn {
+      margin-top: 26px;
+      display: inline-flex;
+      padding: 15px 20px;
+      background:#9CCE00;
+         border: 1px solid #9CCE00;
+      color:#000;
+      text-decoration: none;
+      line-height: 1;
+      font-family: 'Sakana-Regular';
+      color: #000;
+      align-items: end;
+      gap: 0 1rem;
+    }
+
+
+      #combat-{{ section.id }} .combat-btn svg path{
+          fill:#000;
+      }
+
+      #combat-{{ section.id }} .combat-btn:hover{
+      background:transparent;
+         border: 1px solid #9CCE00;
+      color: #9CCE00;
+  }
+      #combat-{{ section.id }} .combat-btn:hover svg path {
+      fill: #9CCE00;
+      }
+
+
+
+    #combat-{{ section.id }} .icon-arrow {
+      width: 20px;
+      height: 20px;
+    }
+
+    /*========================================
+      DESKTOP STYLES
+    ========================================*/
+    @media (min-width: 992px) {
+    
+      #combat-{{ section.id }} .combat-row.dir-row {
+        flex-direction: row;
+      }
+
+      #combat-{{ section.id }} .combat-row.dir-row-reverse {
+        flex-direction: row-reverse;
+      }
+
+      #combat-{{ section.id }} .content-inner {
+        padding: 64px;
+      }
+    }
+
+
+    @media (min-width: 640px) {
+          
+    #combat-{{ section.id }} .brand-logo {
+      max-width: 100px;
+      height: auto;
+    }
+  
+
+
+      }
+
+#combat-{{ section.id }} .brand-mark {
+  display: inline-block; /* ensures transform works properly */
+  transform-origin: center center; /* rotate around its own center */
+  animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+   /*========================================
+      Mobile STYLES
+    ========================================*/
+@media (max-width: 768px) {
+#combat-{{ section.id }} .title {
+margin: 0 0 22px;
+font-size: 26px; 
+}
+#combat-{{ section.id }} .content-inner p {
+font-size: 13px;
+line-height: 30px;
+}
+#combat-{{ section.id }} .kicker {
+  font-size: 12px !important;
+  line-height: 20px!important;
+  margin: 0 0 22px!important;
+}
+#combat-{{ section.id }} .combat-btn { 
+  padding: 14px 10px;
+}
+#combat-{{ section.id }} .brand-logo {
+    max-width: 95px !important;
+}
+}
+</style>
+
+<section id="combat-{{ section.id }}" class="combat-section" data-image-pos="{{ section.settings.image_position }}">
+  {% assign bg = section.settings.content_bg | default: '#0f1315' %}
+  {% assign tc = section.settings.text_color | default: '#ffffff' %}
+  {% assign btn_bg = section.settings.button_bg | default: '#a7ff1e' %}
+  {% assign btn_tc = section.settings.button_text_color | default: '#111111' %}
+
+  <div
+    class="combat-wrap"
+    style="--pad-t: {{ section.settings.pad_top }}px; --pad-b: {{ section.settings.pad_bottom }}px;"
+  >
+    <div
+      class="
+        combat-row
+        {% if section.settings.image_position == 'left' %}dir-row{% else %}dir-row-reverse{% endif %}
+      "
+    >
+      <!-- IMAGE -->
+      <div class="combat-media">
+        {% if section.settings.image != blank %}
+          {{
+            section.settings.image
+            | image_url: width: 2400
+            | image_tag:
+              loading: 'lazy',
+              widths: '480, 720, 960, 1200, 1600, 2000, 2400',
+              sizes: '(min-width: 1200px) 50vw, 100vw',
+              class: 'combat-img'
+          }}
+        {% else %}
+          <div class="img-placeholder">Upload image</div>
+        {% endif %}
+      </div>
+
+      <!-- CONTENT -->
+      <div class="combat-content" style="background: {{ bg }}; color: {{ tc }};">
+        <div class="content-inner" style="max-width: {{ section.settings.content_max }}px;">
+          {% if section.settings.logo != blank %}
+            <div class="brand-mark">
+              {{
+                section.settings.logo
+                | image_url: width: 300
+                | image_tag: loading: 'lazy', widths: '120, 180, 240, 300', class: 'brand-logo'
+              }}
+            </div>
+          {% endif %}
+
+          {% if section.settings.kicker != blank %}
+            <p class="kicker">{{ section.settings.kicker }}</p>
+          {% endif %}
+
+          {% if section.settings.heading != blank %}
+            <h2 class="title">{{ section.settings.heading }}</h2>
+          {% endif %}
+
+          {% if section.settings.richtext != blank %}
+            <div class="copy rte">{{ section.settings.richtext }}</div>
+          {% endif %}
+
+          {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+            <a
+              href="{{ section.settings.button_link }}"
+              class="combat-btn"
+              style="--btn-bg: {{ btn_bg }}; --btn-tc: {{ btn_tc }};"
+            >
+              <span>{{ section.settings.button_label }}</span>
+
+              {% render 'btn-wheelicon' %}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Image + Content",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Main image" },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position (desktop)",
+      "default": "right",
+      "options": [
+        { "value": "left", "label": "Left (row)" },
+        { "value": "right", "label": "Right (row-reverse)" }
+      ]
+    },
+    { "type": "image_picker", "id": "logo", "label": "Logo (optional)" },
+    { "type": "text", "id": "kicker", "label": "Kicker / Small label", "default": "OUR STORY" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "ABOUT ETI’S COMBAT" },
+    {
+      "type": "richtext",
+      "id": "richtext",
+      "label": "Content",
+      "default": "<p>Elite Ti is more than a brand—it's a passion-driven pursuit of performance. Founded by a veteran and car enthusiast, we specialize in top-tier carbon fiber, dry carbon, and titanium upgrades for race cars, drift machines, and JDM builds.</p>"
+    },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Explore More" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "color", "id": "content_bg", "label": "Content background", "default": "#0f1315" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#ffffff" },
+    { "type": "color", "id": "button_bg", "label": "Button background", "default": "#a7ff1e" },
+    { "type": "color", "id": "button_text_color", "label": "Button text color", "default": "#111111" },
+    {
+      "type": "range",
+      "id": "content_max",
+      "label": "Max content width (px)",
+      "min": 480,
+      "max": 1000,
+      "step": 20,
+      "default": 820
+    },
+    {
+      "type": "range",
+      "id": "desktop_min_height",
+      "label": "Desktop min height (px)",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "pad_top",
+      "label": "Section padding top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "pad_bottom",
+      "label": "Section padding bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "default": 60
+    }
+  ],
+  "presets": [{ "name": "Image + Content", "category": "Image" }]
+}
+{% endschema %}

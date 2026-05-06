@@ -1,0 +1,314 @@
+{% comment %}
+  BLOG CARDS – Center Emphasis + Hover Overlay
+  - Left & Right: normal cards (image + text below)
+  - Middle card: slightly larger emphasis; on hover, overlay shows Title + Read more on image
+  - Overlay hover works on ALL cards (image ke upar)
+{% endcomment %}
+
+<section id="blog-cards-{{ section.id }}" class="blog-cards"
+  style="--bg: {{ section.settings.bg | default: '#000000' }}; 
+         --heading: {{ section.settings.heading_color | default: '#ffffff' }};
+         --subheading: {{ section.settings.subheading_color | default: '#a7a7a7' }};
+         --card-bg: {{ section.settings.card_bg | default: '#0b0b0b' }};
+         --text: {{ section.settings.text_color | default: '#dcdcdc' }};
+         --accent: {{ section.settings.accent | default: '#c6ff00' }};
+         --badge-bg: {{ section.settings.badge_bg | default: '#c6ff00' }};
+         --badge-text: {{ section.settings.badge_text | default: '#111111' }};
+         --overlay: {{ section.settings.overlay_bg | default: 'rgba(0,0,0,0.55)' }};
+         --button-text: {{ section.settings.button_text_color | default: '#111111' }};
+         --button-bg: {{ section.settings.button_bg_color | default: '#c6ff00' }};
+         --button-bg-hover: {{ section.settings.button_bg_hover | default: '#b3ef00' }};
+         --gap: {{ section.settings.gap | default: 28 }}px;">
+  <div class="container">
+    {% if section.settings.kicker != blank or section.settings.title != blank %}
+      <div class="head">
+        {% if section.settings.kicker != blank %}
+          <div class="kicker">{{ section.settings.kicker }}</div>
+        {% endif %}
+        {% if section.settings.title != blank %}
+          <h2 class="title">{{ section.settings.title }}</h2>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% assign the_blog = section.settings.blog %}
+    {% if the_blog != blank and blogs[the_blog].articles_count > 0 %}
+      {% assign limit = section.settings.limit | default: 3 %}
+      <div class="grid">
+        {% for article in blogs[the_blog].articles limit: limit %}
+          {% assign index0 = forloop.index0 %}
+          <article class="card {% if index0 == 1 %}is-center{% endif %}">
+            <a class="card-link" href="{{ article.url }}" aria-label="{{ article.title }}"></a>
+
+            <div class="media">
+              {% if article.image %}
+                {{ article.image | image_url: width: 1600 | image_tag:
+                  loading: 'lazy',
+                  widths: '400, 600, 800, 1200, 1600',
+                  sizes: '(min-width: 1200px) 33vw, (min-width: 768px) 50vw, 100vw',
+                  alt: article.title }}
+              {% else %}
+                {{ 'image' | placeholder_svg_tag }}
+              {% endif %}
+
+              <span class="date-badge">
+                {{ article.published_at | time_tag: format: '%d %B %Y' }}
+              </span>
+
+              <!-- Hover Overlay (image ke upar) -->
+              <div class="overlay">
+                <h3 class="overlay-title">{{ article.title }}</h3>
+                <span class="overlay-cta">Read more</span>
+              </div>
+            </div>
+
+            <div class="body">
+              <h3 class="card-title">{{ article.title }}</h3>
+              {% if section.settings.show_excerpt %}
+                <p class="excerpt">
+                  {{ article.excerpt_or_content | strip_html | truncate: 200 }}
+                </p>
+              {% endif %}
+              <a class="read-more" href="{{ article.url }}">READ MORE</a>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p style="color:var(--text)">Please select a blog with at least one article.</p>
+    {% endif %}
+
+    {% if section.settings.viewall_label != blank and section.settings.viewall_url != blank %}
+      <div class="cta-wrap">
+        <a href="{{ section.settings.viewall_url }}" class="view-all">
+          {{ section.settings.viewall_label }}
+          <span class="dot" aria-hidden="true"></span>
+        </a>
+      </div>
+    {% endif %}
+  </div>
+
+  <style>
+    #blog-cards-{{ section.id }}{
+      background: var(--bg);
+      padding: clamp(40px, 6vw, 90px) 0;
+      color: var(--text);
+      font-family: inherit;
+    }
+    #blog-cards-{{ section.id }} .container{
+      width: min(1200px, 92vw);
+      margin: 0 auto;
+    }
+    #blog-cards-{{ section.id }} .head{
+      text-align: center;
+      margin-bottom: clamp(24px, 4vw, 40px);
+    }
+    #blog-cards-{{ section.id }} .kicker{
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+    #blog-cards-{{ section.id }} .title{
+      color: var(--heading);
+      text-transform: uppercase;
+      font-size: clamp(26px, 3.6vw, 44px);
+      letter-spacing: .04em;
+      margin: 0;
+    }
+
+    /* GRID */
+    #blog-cards-{{ section.id }} .grid{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--gap);
+    }
+    @media (min-width: 900px){
+      #blog-cards-{{ section.id }} .grid{
+        grid-template-columns: repeat(3, 1fr);
+        align-items: start;
+      }
+    }
+
+    /* CARD */
+    #blog-cards-{{ section.id }} .card{
+      position: relative;
+      background: var(--card-bg);
+      overflow: hidden;
+      border-radius: 8px;
+    }
+    #blog-cards-{{ section.id }} .card .card-link{
+      position:absolute; inset:0; z-index:5;
+    }
+
+    /* Center card emphasis (second item) */
+    @media (min-width: 900px){
+      #blog-cards-{{ section.id }} .card.is-center{
+        transform: scale(1.06);
+        box-shadow: 0 18px 40px rgba(0,0,0,.45);
+      }
+    }
+
+    /* MEDIA (image block) */
+    #blog-cards-{{ section.id }} .media{
+      position: relative;
+      aspect-ratio: 16/10;
+      overflow: hidden;
+    }
+    #blog-cards-{{ section.id }} .media img{
+      width: 100%; height: 100%; object-fit: cover; display:block;
+      transition: transform .45s ease;
+    }
+    #blog-cards-{{ section.id }} .card:hover .media img{
+      transform: scale(1.05);
+    }
+
+    /* DATE BADGE */
+    #blog-cards-{{ section.id }} .date-badge{
+      position: absolute; left: 16px; top: 12px;
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      font-weight: 800;
+      font-size: 11px;
+      line-height: 1;
+      padding: 8px 10px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    /* OVERLAY (shows on hover) */
+    #blog-cards-{{ section.id }} .overlay{
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 18px;
+      background: linear-gradient(to top, var(--overlay) 0%, transparent 60%);
+      opacity: 0; transform: translateY(6px);
+      transition: opacity .35s ease, transform .35s ease;
+      pointer-events: none;
+    }
+    #blog-cards-{{ section.id }} .card:hover .overlay{
+      opacity: 1; transform: translateY(0);
+    }
+    #blog-cards-{{ section.id }} .overlay-title{
+      color: #fff;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      margin: 0 0 8px 0;
+      font-size: clamp(16px, 2vw, 22px);
+    }
+    #blog-cards-{{ section.id }} .overlay-cta{
+      display: inline-block;
+      background: var(--accent);
+      color: #111;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 8px 12px;
+      border-radius: 2px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      width: fit-content;
+    }
+
+    /* BODY (below image) */
+    #blog-cards-{{ section.id }} .body{
+      padding: 18px 18px 22px;
+    }
+    #blog-cards-{{ section.id }} .card-title{
+      color: #fff;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      margin: 0 0 10px 0;
+      font-size: clamp(16px, 2.1vw, 22px);
+    }
+    #blog-cards-{{ section.id }} .excerpt{
+      color: var(--subheading);
+      font-size: 13px;
+      line-height: 1.6;
+      margin: 0 0 14px 0;
+    }
+    #blog-cards-{{ section.id }} .read-more{
+      display: inline-block;
+      color: #fff;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      position: relative;
+    }
+    #blog-cards-{{ section.id }} .read-more::after{
+      content: "";
+      position: absolute; left: 0; bottom: -2px;
+      width: 70px; height: 2px; background: #fff;
+    }
+
+    /* VIEW ALL button */
+    #blog-cards-{{ section.id }} .cta-wrap{
+      text-align: center; margin-top: clamp(26px, 5vw, 44px);
+    }
+    #blog-cards-{{ section.id }} .view-all{
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--button-bg);
+      color: var(--button-text);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 12px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background .25s ease, transform .25s ease;
+    }
+    #blog-cards-{{ section.id }} .view-all:hover{
+      background: var(--button-bg-hover);
+      transform: translateY(-1px);
+    }
+    #blog-cards-{{ section.id }} .view-all .dot{
+      width: 8px; height: 8px; border-radius: 999px; background:#111;
+      display:inline-block;
+    }
+  </style>
+</section>
+
+{% schema %}
+{
+  "name": "Blog – Center Emphasis",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker (small top text)", "default": "LATEST BLOG" },
+    { "type": "text", "id": "title", "label": "Heading", "default": "BLOG POSTS" },
+
+    { "type": "blog", "id": "blog", "label": "Select blog" },
+    { "type": "range", "id": "limit", "label": "Number of posts", "min": 1, "max": 9, "step": 1, "default": 3 },
+    { "type": "checkbox", "id": "show_excerpt", "label": "Show excerpt", "default": true },
+
+    { "type": "header", "content": "Layout & Spacing" },
+    { "type": "range", "id": "gap", "label": "Card gap (px)", "min": 8, "max": 48, "step": 4, "default": 28 },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg", "label": "Section background", "default": "#000000" },
+    { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#ffffff" },
+    { "type": "color", "id": "subheading_color", "label": "Excerpt color", "default": "#bdbdbd" },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#0b0b0b" },
+    { "type": "color", "id": "text_color", "label": "Base text color", "default": "#e5e5e5" },
+    { "type": "color", "id": "accent", "label": "Accent (overlay button)", "default": "#C6FF00" },
+    { "type": "color", "id": "badge_bg", "label": "Date badge background", "default": "#C6FF00" },
+    { "type": "color", "id": "badge_text", "label": "Date badge text", "default": "#111111" },
+    { "type": "color", "id": "overlay_bg", "label": "Image overlay gradient (bottom)", "default": "#0000008C" },
+
+    { "type": "header", "content": "View all button" },
+    { "type": "text", "id": "viewall_label", "label": "Button label", "default": "View all" },
+    { "type": "url", "id": "viewall_url", "label": "Button link" },
+    { "type": "color", "id": "button_bg_color", "label": "Button background", "default": "#C6FF00" },
+    { "type": "color", "id": "button_bg_hover", "label": "Button background (hover)", "default": "#B3EF00" },
+    { "type": "color", "id": "button_text_color", "label": "Button text", "default": "#111111" }
+  ],
+  "blocks": [],
+  "presets": [
+    { "name": "Blog – Center Emphasis" }
+  ]
+}
+{% endschema %}

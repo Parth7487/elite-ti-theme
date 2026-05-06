@@ -1,0 +1,475 @@
+<style>
+  #brand-models-{{ section.id }}{
+    background: var(--bg);
+    color: var(--text);
+    padding: {{ section.settings.pad_y }}px 0;
+    position: relative; /* for overlay */
+  }
+  /* overlay via ::after */
+  #brand-models-{{ section.id }}::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--ovc);
+    opacity: var(--ov);
+    pointer-events: none;
+  }
+  #brand-models-{{ section.id }} .container{
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative; /* ensure above overlay */
+    z-index: 1;
+  }
+  #brand-models-{{ section.id }} .bm-header{
+    margin-bottom: 24px;
+    text-align: left;
+  }
+  #brand-models-{{ section.id }} .bm-title{
+    margin: 0;
+    line-height: 1.1;
+    letter-spacing: .02em;
+    font-size: clamp(22px, 2.6vw, 36px);
+    color: var(--text);
+    font-family: 'Sakana-Regular';
+  }
+  #brand-models-{{ section.id }} .bm-sub{
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-size: clamp(13px, 1.6vw, 16px);
+  }
+
+  #brand-models-{{ section.id }} .bm-table{
+    display: grid;
+    gap: var(--row-gap);
+  }
+
+  #brand-models-{{ section.id }} .bm-row{
+    display: grid;
+    grid-template-columns: minmax(150px, var(--brand-w)) 1fr;
+    align-items: start;
+    padding: 30px 0;
+    border-top: 1px solid var(--divider);
+  }
+  #brand-models-{{ section.id }} .bm-row:last-child{
+    border-bottom: 1px solid var(--divider);
+  }
+
+  #brand-models-{{ section.id }} .bm-brand{
+   font-weight: 400;
+  font-size: 40px;
+  line-height: 100%;
+  letter-spacing: 0;
+  text-transform: capitalize;
+  font-family: 'Sakana-Regular';
+    color: var(--text);
+  }
+
+  #brand-models-{{ section.id }} .bm-items{
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--col-gap);
+  }
+
+  #brand-models-{{ section.id }} .bm-pill{
+    display: inline-block;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 20px;
+    letter-spacing: .06em;
+    text-decoration: none;
+    color: var(--text);
+    opacity: .9;
+    position: relative;
+    padding: 2px 0;
+     font-family: 'Sakana-Regular';
+  }
+  #brand-models-{{ section.id }} .bm-pill:hover,
+  #brand-models-{{ section.id }} .bm-pill:focus{
+    color: var(--accent);
+    opacity: 1;
+  }
+
+  @media (max-width: 768px){
+    #brand-models-{{ section.id }} .bm-row{
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    #brand-models-{{ section.id }} .bm-brand{
+      font-size: 16px;
+    }
+
+     #brand-models-{{ section.id }}  .bm-pill {
+        font-size: 14px;
+    }
+    #brand-models-{{ section.id }} .bm-items{
+      gap: 10px 16px;
+    }
+  }
+
+  @media (max-width: 640px){
+    #brand-models-{{ section.id }} .bm-title{
+    text-align:center;
+  }
+}
+
+  /* ===============================
+     MOBILE VIEW
+  =============================== */
+ @media (max-width: 768px){
+ #brand-models-{{ section.id }} .bm-row{
+      padding: 20px 0;
+    }
+  #brand-models-{{ section.id }} .bm-brand{
+      font-size: 14px;
+    }
+  #brand-models-{{ section.id }}  .bm-pill {
+    font-size: 11px;
+  }
+   #brand-models-{{ section.id }} .bm-items{
+      gap: 8px 12px;
+    }
+
+}
+</style>
+
+<section
+  id="brand-models-{{ section.id }}"
+  class="brand-table"
+  style="--bg: {{ section.settings.bg_color }}; --text: {{ section.settings.text_color }}; --muted: {{ section.settings.muted_color }}; --accent: {{ section.settings.accent_color }}; --row-gap: {{ section.settings.row_gap }}px; --col-gap: {{ section.settings.col_gap }}px; --divider: {{ section.settings.divider_color }}; --container: {{ section.settings.container_width }}px; --brand-w: {{ section.settings.brand_col_width }}%; --ovc: {{ section.settings.overlay_color }}; --ov: {{ section.settings.overlay_opacity | times: 0.01 }}; {% if section.settings.bg_image != blank %}background-image:url('{{ section.settings.bg_image | image_url: width: 2400 }}'); background-size: cover; background-position: center; background-repeat:no-repeat;{% endif %}"
+>
+  <div class="container">
+    {% if section.settings.heading != blank or section.settings.subheading != blank %}
+      <header class="bm-header">
+        {% if section.settings.heading != blank %}
+          <h2 class="bm-title">{{ section.settings.heading }}</h2>
+        {% endif %}
+        {% if section.settings.subheading != blank %}
+          <p class="bm-sub">{{ section.settings.subheading }}</p>
+        {% endif %}
+      </header>
+    {% endif %}
+    <div class="bm-table">
+      {% for block in section.blocks %}
+        <div class="bm-row" {{ block.shopify_attributes }}>
+          <div class="bm-brand">{{ block.settings.brand | escape }}</div>
+          <div class="bm-items">
+            {% if block.settings.model_1 != blank %}
+              <a class="bm-pill" href="{{ block.settings.model_1_link }}">{{ block.settings.model_1 }}</a>
+            {% endif %}
+            {% if block.settings.model_2 != blank %}
+              <a class="bm-pill" href="{{ block.settings.model_2_link }}">{{ block.settings.model_2 }}</a>
+            {% endif %}
+            {% if block.settings.model_3 != blank %}
+              <a class="bm-pill" href="{{ block.settings.model_3_link }}">{{ block.settings.model_3 }}</a>
+            {% endif %}
+            {% if block.settings.model_4 != blank %}
+              <a class="bm-pill" href="{{ block.settings.model_4_link }}">{{ block.settings.model_4 }}</a>
+            {% endif %}
+            {% if block.settings.model_5 != blank %}
+              <a class="bm-pill" href="{{ block.settings.model_5_link }}">{{ block.settings.model_5 }}</a>
+            {% endif %}
+            {% if block.settings.model_6 != blank %}
+              <a class="bm-pill" href="{{ block.settings.model_6_link }}">{{ block.settings.model_6 }}</a>
+            {% endif %}
+            {% if block.settings.model_7 != blank %}
+              <a class="bm-pill" href="{{ block.settings.model_7_link }}">{{ block.settings.model_7 }}</a>
+            {% endif %}
+            {% if block.settings.model_8 != blank %}
+              <a class="bm-pill" href="{{ block.settings.model_8_link }}">{{ block.settings.model_8 }}</a>
+            {% endif %}
+            {% if block.settings.model_9 != blank %}
+              <a class="bm-pill" href="{{ block.settings.model_9_link }}">{{ block.settings.model_9 }}</a>
+            {% endif %}
+            {% if block.settings.model_10 != blank %}
+              <a class="bm-pill" href="{{ block.settings.model_10_link }}">{{ block.settings.model_10 }}</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brand & Models Table",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop by Vehicle"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background image"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color (for ::after)",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity (%)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 60
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color (fallback)",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text color",
+      "default": "#a3a3a3"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent (hover) color",
+      "default": "#b8ff2d"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Row divider color",
+      "default": "#272727"
+    },
+    {
+      "type": "range",
+      "id": "pad_y",
+      "label": "Top & bottom padding (px)",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Max container width (px)",
+      "min": 900,
+      "max": 1900,
+      "step": 10,
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "brand_col_width",
+      "label": "Brand column width (%)",
+      "min": 15,
+      "max": 40,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "row_gap",
+      "label": "Row spacing (px)",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "col_gap",
+      "label": "Item gap (px)",
+      "min": 6,
+      "max": 36,
+      "step": 1,
+      "default": 18
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Brand row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "brand",
+          "label": "Brand name",
+          "default": "MAZDA"
+        },
+        {
+          "type": "header",
+          "content": "First model"
+        },
+        {
+          "type": "text",
+          "id": "model_1",
+          "label": "Model 1",
+          "default": "RX7"
+        },
+        {
+          "type": "url",
+          "id": "model_1_link",
+          "label": "Model 1 link"
+        },
+        {
+          "type": "header",
+          "content": "Second model"
+        },
+        {
+          "type": "text",
+          "id": "model_2",
+          "label": "Model 2",
+          "default": "RX8"
+        },
+        {
+          "type": "url",
+          "id": "model_2_link",
+          "label": "Model 2 link"
+        },
+        {
+          "type": "header",
+          "content": "Third model"
+        },
+        {
+          "type": "text",
+          "id": "model_3",
+          "label": "Model 3",
+          "default": "MX-5"
+        },
+        {
+          "type": "url",
+          "id": "model_3_link",
+          "label": "Model 3 link"
+        },
+        {
+          "type": "header",
+          "content": "Fourth model"
+        },
+        {
+          "type": "text",
+          "id": "model_4",
+          "label": "Model 4",
+          "default": "CX-5"
+        },
+        {
+          "type": "url",
+          "id": "model_4_link",
+          "label": "Model 4 link"
+        },
+        {
+          "type": "header",
+          "content": "Fifth model"
+        },
+        {
+          "type": "text",
+          "id": "model_5",
+          "label": "Model 5",
+          "default": "CX-30"
+        },
+        {
+          "type": "url",
+          "id": "model_5_link",
+          "label": "Model 5 link"
+        },
+        {
+          "type": "header",
+          "content": "Sixth model"
+        },
+        {
+          "type": "text",
+          "id": "model_6",
+          "label": "Model 6",
+          "default": "CX-90"
+        },
+        {
+          "type": "url",
+          "id": "model_6_link",
+          "label": "Model 6 link"
+        },
+        {
+          "type": "header",
+          "content": "Seventh model"
+        },
+        {
+          "type": "text",
+          "id": "model_7",
+          "label": "Model 7",
+          "default": "Mazda3"
+        },
+        {
+          "type": "url",
+          "id": "model_7_link",
+          "label": "Model 7 link"
+        },
+        {
+          "type": "header",
+          "content": "Eighth model"
+        },
+        {
+          "type": "text",
+          "id": "model_8",
+          "label": "Model 8",
+          "default": "Mazda6"
+        },
+        {
+          "type": "url",
+          "id": "model_8_link",
+          "label": "Model 8 link"
+        },
+        {
+          "type": "header",
+          "content": "Ninth model"
+        },
+        {
+          "type": "text",
+          "id": "model_9",
+          "label": "Model 9",
+          "default": "BT-50"
+        },
+        {
+          "type": "url",
+          "id": "model_9_link",
+          "label": "Model 9 link"
+        },
+        {
+          "type": "header",
+          "content": "Tenth model"
+        },
+        {
+          "type": "text",
+          "id": "model_10",
+          "label": "Model 10",
+          "default": "Mazda2"
+        },
+        {
+          "type": "url",
+          "id": "model_10_link",
+          "label": "Model 10 link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand & Models Table"
+    }
+  ]
+}
+{% endschema %}

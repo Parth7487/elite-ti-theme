@@ -1,0 +1,275 @@
+{% comment %}
+  Titanium Add-on Snippet
+  Usage: {% render 'titanium-addon', block: block %}
+{% endcomment %}
+
+{% if block.settings.enable and block.settings.addon_product %}
+{% assign addon_product = all_products[block.settings.addon_product] %}
+{% assign addon_variant = addon_product.variants.first %}
+<div class="titanium-option titanium-option-{{ block.id }}" 
+     data-addon-variant="{{ addon_variant.id }}"
+     data-block-id="{{ block.id }}">
+  <input type="checkbox" id="titanium-checkbox-{{ block.id }}" class="titanium-checkbox">
+  <label for="titanium-checkbox-{{ block.id }}" class="titanium-label">
+    {{ block.settings.label_text }}
+  </label>
+  {% comment %} <span class="titanium-price">{{ addon_variant.price | money }}</span> {% endcomment %}
+</div>
+
+<style>
+.titanium-option {
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  {% comment %} padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 8px; {% endcomment %}
+}
+
+.titanium-checkbox {
+  width: 20px !important;
+  height: 20px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-color: #fff;
+  border: 2px solid #555;
+  border-radius: 4px;
+  position: relative;
+  transition: background-color 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.titanium-checkbox:checked {
+  background-color: #9cce00;
+  border-color: #9cce00;
+}
+
+.titanium-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid #000;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.titanium-label {
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  flex-grow: 1;
+}
+
+.titanium-price {
+  font-weight: bold;
+  color: #333;
+  margin-left: auto;
+}
+
+@keyframes fadeSlide {
+  0% { opacity: 0; transform: translateX(20px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+</style>
+
+<script>
+// Global initialization flag and queue
+if (!window.titaniumAddons) {
+  window.titaniumAddons = {
+    queue: [],
+    initialized: false,
+    initQueue: []
+  };
+}
+
+// Store this block's data globally
+window.titaniumAddons.queue.push({
+  blockId: '{{ block.id }}',
+  variantId: {{ addon_variant.id }},
+  label: `{{ block.settings.label_text }}`
+});
+
+// Single initialization function for all blocks
+function initAllTitaniumAddons() {
+  if (window.titaniumAddons.initialized) return;
+  
+  const form = document.querySelector('form[action*="/cart/add"]');
+  if (!form) {
+    // Try again in 100ms if form not found
+    setTimeout(initAllTitaniumAddons, 100);
+    return;
+  }
+  
+  // Mark as initialized
+  window.titaniumAddons.initialized = true;
+  
+  // Initialize each block in the queue
+  window.titaniumAddons.queue.forEach(({ blockId, variantId, label }) => {
+    const optionWrapper = document.querySelector(`.titanium-option-${blockId}`);
+    if (!optionWrapper || optionWrapper.dataset.initialized === 'true') return;
+    
+    const checkbox = optionWrapper.querySelector('.titanium-checkbox');
+    let isProcessing = false;
+    
+    // Create unique hidden input for this addon
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = `properties[Add-on-${blockId}]`;
+    hiddenInput.value = '';
+    form.appendChild(hiddenInput);
+    
+    // Check initial cart state
+    fetch('/cart.js')
+      .then(r => r.json())
+      .then(cart => {
+        const addonItem = cart.items.find(i => i.variant_id === variantId);
+        if (addonItem && addonItem.quantity > 0) {
+          checkbox.checked = true;
+          hiddenInput.value = label;
+        }
+      })
+      .catch(console.error);
+    
+    // Checkbox change handler
+    checkbox.addEventListener('change', async function() {
+      if (isProcessing) return;
+      isProcessing = true;
+      
+      const wantAddon = this.checked;
+      hiddenInput.value = wantAddon ? label : '';
+      
+      try {
+        const cart = await fetch('/cart.js').then(r => r.json());
+        const addonItem = cart.items.find(i => i.variant_id === variantId);
+        
+        if (wantAddon) {
+          if (!addonItem) {
+            // Add new item
+            await fetch('/cart/add.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                id: variantId,
+                quantity: 1,
+                properties: { 'Add-on': label }
+              })
+            });
+            showNotification(`${label} added to cart!`);
+          } else if (addonItem.quantity !== 1) {
+            // Ensure quantity is exactly 1
+            await fetch('/cart/change.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                id: addonItem.key,
+                quantity: 1
+              })
+            });
+          }
+        } else if (addonItem) {
+          // Remove item
+          await fetch('/cart/change.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: addonItem.key,
+              quantity: 0
+            })
+          });
+          showNotification(`${label} removed from cart!`);
+        }
+        
+        // Update cart count
+        updateCartCount();
+        
+      } catch (error) {
+        console.error('Error updating add-on:', error);
+        this.checked = !wantAddon;
+        hiddenInput.value = this.checked ? label : '';
+        showNotification('Error updating add-on. Please try again.', true);
+      }
+      
+      isProcessing = false;
+    });
+    
+    // Form submit handler
+    form.addEventListener('submit', () => {
+      hiddenInput.value = checkbox.checked ? label : '';
+    });
+    
+    // Mark as initialized
+    optionWrapper.dataset.initialized = 'true';
+    console.log(`Titanium add-on ${blockId} initialized`);
+  });
+  
+  // Clear the queue
+  window.titaniumAddons.queue = [];
+}
+
+// Helper functions
+function updateCartCount() {
+  fetch('/cart.js')
+    .then(r => r.json())
+    .then(cart => {
+      const counters = document.querySelectorAll('.cart-count, #CartCount, .js-cart-count, .cart-count-bubble span');
+      counters.forEach(el => {
+        if (el.tagName === 'SPAN' || el.tagName === 'DIV' || el.tagName === 'A') {
+          el.textContent = cart.item_count;
+        }
+      });
+    })
+    .catch(console.error);
+}
+
+function showNotification(message, isError = false) {
+  // Remove existing notifications
+  document.querySelectorAll('.titanium-notification').forEach(el => el.remove());
+  
+  const notification = document.createElement('div');
+  notification.className = 'titanium-notification';
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 6px;
+    background: ${isError ? '#ff4444' : '#9cce00'};
+    color: white;
+    z-index: 10000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-weight: 600;
+    animation: fadeSlide 0.3s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  `;
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.style.opacity = '0';
+    notification.style.transition = 'opacity 0.3s ease';
+    setTimeout(() => notification.remove(), 300);
+  }, 2500);
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    // Small delay to ensure all blocks are loaded
+    setTimeout(initAllTitaniumAddons, 200);
+  });
+} else {
+  setTimeout(initAllTitaniumAddons, 200);
+}
+
+// Reinitialize on section load (for theme editor)
+document.addEventListener('shopify:section:load', () => {
+  window.titaniumAddons.initialized = false;
+  setTimeout(initAllTitaniumAddons, 300);
+});
+</script>
+{% endif %}

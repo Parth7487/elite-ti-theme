@@ -1,0 +1,122 @@
+<div class="color-variant-wrapper">
+  <h5 class="selected-color-heading">
+    Color: <span id="selected-color-name">{{ product.selected_or_first_available_variant.option1 }}</span>
+  </h5>
+
+  <div class="color-variant-swatches">
+    {% for option in product.options_with_values %}
+      {% if option.name == 'Color' %}
+        {% for value in option.values %}
+          {% assign handle = value | handle %}
+
+          {% case handle %}
+            {% when 'silver' %}{% assign color_value = '#C0C0C0' %}
+            {% when 'gold' %}{% assign color_value = '#FFD700' %}
+            {% when 'red' %}{% assign color_value = '#FF0000' %}
+            {% when 'purple' %}{% assign color_value = '#800080' %}
+            {% when 'rose-gold' %}{% assign color_value = '#B76E79' %}
+            {% when 'copper' %}{% assign color_value = '#B87333' %}
+            {% when 'bronze' %}{% assign color_value = '#CD7F32' %}
+            {% when 'champagne-gold' %}{% assign color_value = '#F7E7CE' %}
+            {% when 'light-gold' %}{% assign color_value = '#E6C200' %}
+            {% when 'antique-gold' %}{% assign color_value = '#C28840' %}
+            {% when 'dark-gold' %}{% assign color_value = '#A67C00' %}
+            {% when 'emerald-green' %}{% assign color_value = '#50C878' %}
+            {% when 'jade-green' %}{% assign color_value = '#00A36C' %}
+            {% when 'aqua-blue' %}{% assign color_value = '#00FFFF' %}
+            {% when 'sapphire-blue' %}{% assign color_value = '#0F52BA' %}
+            {% when 'royal-blue' %}{% assign color_value = '#4169E1' %}
+            {% when 'light-blue' %}{% assign color_value = '#ADD8E6' %}
+            {% when 'violet' %}{% assign color_value = '#8F00FF' %}
+            {% when 'magenta' %}{% assign color_value = '#FF00FF' %}
+            {% when 'crimson-red' %}{% assign color_value = '#DC143C' %}
+            {% when 'gunmetal' %}{% assign color_value = '#2a3439' %}
+            {% when 'charcoal-black' %}{% assign color_value = '#36454F' %}
+            {% when 'mixed-silver-gold' %}{% assign color_value = 'linear-gradient(45deg, #C0C0C0, #FFD700)' %}
+            {% when 'blue-gold-hybrid' %}{% assign color_value = 'linear-gradient(45deg, #0000FF, #FFD700)' %}
+            {% when 'green-gold-hybrid' %}{% assign color_value = 'linear-gradient(45deg, #00A36C, #FFD700)' %}
+            {% else %}
+              {% assign color_value = value %}
+          {% endcase %}
+
+          {% if color_value contains 'linear-gradient' %}
+            <div class="color-swatch gradient"
+                 data-color="{{ value }}"
+                 style="background-image: {{ color_value }};"
+                 title="{{ value }}">
+            </div>
+          {% else %}
+            <div class="color-swatch"
+                 data-color="{{ value }}"
+                 style="background-color: {{ color_value }};"
+                 title="{{ value }}">
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% style %}
+.color-variant-swatches {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.color-swatch {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  background-size: cover;
+}
+
+.color-swatch.gradient {
+  background-color: transparent;
+  background-size: 200%;
+}
+
+.color-swatch.active {
+  border-color: #000;
+  transform: scale(1.1);
+}
+
+{% endstyle %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const swatches = document.querySelectorAll('.color-swatch');
+  const colorName = document.getElementById('selected-color-name');
+  
+  if (swatches.length > 0) {
+    // Activate the swatch that matches the default color
+    const defaultColor = colorName ? colorName.textContent.trim() : null;
+    let activeSwatch = null;
+
+    swatches.forEach(swatch => {
+      const swatchColor = swatch.getAttribute('data-color');
+      if (defaultColor && swatchColor.toLowerCase() === defaultColor.toLowerCase()) {
+        activeSwatch = swatch;
+      }
+    });
+
+    if (!activeSwatch) activeSwatch = swatches[0];
+    activeSwatch.classList.add('active');
+    colorName.textContent = activeSwatch.getAttribute('data-color');
+
+    // Handle swatch click
+    swatches.forEach(swatch => {
+      swatch.addEventListener('click', function() {
+        const selectedColor = this.getAttribute('data-color');
+        if (colorName) colorName.textContent = selectedColor;
+        swatches.forEach(s => s.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  }
+});
+</script>
