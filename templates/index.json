@@ -12,6 +12,16 @@
     "elite_explore_aero_MTq7Kr": {
       "type": "elite-explore-aero",
       "blocks": {
+        "hotspot_NwMgLn": {
+          "type": "hotspot",
+          "settings": {
+            "pos_y": 50,
+            "pos_x": 50,
+            "label": "Component",
+            "title": "VENTED HOOD",
+            "spec": "SYS: 1X1 CF / $4,200"
+          }
+        },
         "hotspot_xRi8cE": {
           "type": "hotspot",
           "settings": {
@@ -44,12 +54,14 @@
         }
       },
       "block_order": [
+        "hotspot_NwMgLn",
         "hotspot_xRi8cE",
         "hotspot_cEyyUK",
         "hotspot_DnKjYb"
       ],
       "name": "Elite - Explore Aero",
       "settings": {
+        "bg_image": "shopify://shop_images/Supra_Top_Secret_V12_Style_Body_Kit-8.jpg",
         "heading": "Explore\nAero\nDynamics",
         "subtext": "[INTERACT WITH VIRTUAL CHASSIS TO REVEAL TELEMETRY DATA AND COMPONENT SPECS]"
       }
