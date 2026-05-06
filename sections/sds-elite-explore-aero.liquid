@@ -18,8 +18,12 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.5;
+    opacity: {{ section.settings.image_opacity | divided_by: 100.0 }};
+    {% if section.settings.enable_luminosity %}
     mix-blend-mode: luminosity;
+    {% else %}
+    mix-blend-mode: normal;
+    {% endif %}
   }
   .elite-hotspot {
     position: absolute;
@@ -107,7 +111,7 @@
 
 {% schema %}
 {
-  "name": "Elite - Explore Aero",
+  "name": "SDS Elite - Explore Aero",
   "tag": "section",
   "class": "section",
   "settings": [
@@ -115,6 +119,22 @@
       "type": "image_picker",
       "id": "bg_image",
       "label": "Background Image"
+    },
+    {
+      "type": "range",
+      "id": "image_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Image Opacity",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_luminosity",
+      "label": "Enable Luminosity Blend",
+      "default": false
     },
     {
       "type": "textarea",
@@ -177,7 +197,7 @@
   ],
   "presets": [
     {
-      "name": "Elite - Explore Aero",
+      "name": "SDS Elite - Explore Aero",
       "blocks": [
         { "type": "hotspot", "settings": { "pos_y": 45, "pos_x": 30, "title": "VENTED HOOD", "spec": "SYS: 1X1 CF / $4,200" } },
         { "type": "hotspot", "settings": { "pos_y": 75, "pos_x": 15, "title": "AERO DISCS", "spec": "SYS: FORGED / $2,800" } },
