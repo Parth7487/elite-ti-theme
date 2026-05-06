@@ -196,24 +196,30 @@ body, p, span, div, a {
 }
 
 /* Header & Announcement Bar Consistency */
-.announcement-bar {
+.utility-bar, .utility-bar-color-1, .announcement-bar-section, .announcement-bar {
     background-color: #CCFF00 !important;
+    border: none !important;
 }
 .announcement-bar__message {
     color: #000000 !important;
     font-family: 'Racing Sans One', cursive !important;
     font-style: italic;
     font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-.header {
+.header-wrapper, .header {
     background-color: #0A0A0A !important;
     border-bottom: 1px solid #333333 !important;
 }
-.header__menu-item span {
+.header__menu-item span, .header__active-menu-item {
     font-family: 'Racing Sans One', cursive !important;
     font-style: italic;
     color: #FFFFFF !important;
+    text-transform: uppercase;
+    font-size: 1.4rem;
+    letter-spacing: 0.05em;
 }
 .header__menu-item:hover span {
     color: #CCFF00 !important;
